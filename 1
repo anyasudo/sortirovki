@@ -1,0 +1,100 @@
+def selection_sort(arr):
+    n = len(arr)
+    for i in range(n):
+        min_idx = i
+        # Ищем минимальный элемент в оставшейся части списка
+        for j in range(i + 1, n):
+            if arr[j] < arr[min_idx]:
+                min_idx = j
+        # Меняем найденный минимум с первым элементом неотсортированной части
+        arr[i], arr[min_idx] = arr[min_idx], arr[i]
+    return arr
+
+print("Выбором:", selection_sort(numbers.copy()))
+
+def shell_sort(arr):
+    n = len(arr)
+    gap = n // 2  # Начальный шаг
+
+    while gap > 0:
+        for i in range(gap, n):
+            temp = arr[i]
+            j = i
+            # Сортировка вставками для элементов, отстоящих друг от друга на gap
+            while j >= gap and arr[j - gap] > temp:
+                arr[j] = arr[j - gap]
+                j -= gap
+            arr[j] = temp
+        gap //= 2  # Уменьшаем шаг вдвое
+    return arr
+
+print("Шелла:", shell_sort(numbers.copy()))
+
+def counting_sort_for_radix(arr, exp):
+    n = len(arr)
+    output = [0] * n
+    count = [0] * 10
+
+    # Считаем количество вхождений цифр
+    for i in range(n):
+        index = arr[i] // exp
+        count[index % 10] += 1
+
+    for i in range(1, 10):
+        count[i] += count[i - 1]
+
+    # Строим выходной массив
+    i = n - 1
+    while i >= 0:
+        index = arr[i] // exp
+        output[count[index % 10] - 1] = arr[i]
+        count[index % 10] -= 1
+        i -= 1
+
+    for i in range(n):
+        arr[i] = output[i]
+
+def radix_sort(arr):
+    if not arr: return arr
+    max_num = max(arr)
+    exp = 1
+    # Сортируем по разрядам (единицы, десятки, сотни...)
+    while max_num // exp > 0:
+        counting_sort_for_radix(arr, exp)
+        exp *= 10
+    return arr
+
+print("Поразрядная:", radix_sort(numbers.copy()))
+
+
+def heapify(arr, n, i):
+    largest = i  # Инициализируем наибольший элемент как корень
+    left = 2 * i + 1
+    right = 2 * i + 2
+
+    # Проверяем, существует ли левый дочерний элемент и больше ли он корня
+    if left < n and arr[left] > arr[largest]:
+        largest = left
+
+    # Проверяем, существует ли правый дочерний элемент и больше ли он
+    if right < n and arr[right] > arr[largest]:
+        largest = right
+
+    # Если корень не наибольший, меняем местами
+    if largest != i:
+        arr[i], arr[largest] = arr[largest], arr[i]
+        heapify(arr, n, largest)
+
+def heap_sort(arr):
+    n = len(arr)
+    # Построение "кучи" (перегруппировка массива)
+    for i in range(n // 2 - 1, -1, -1):
+        heapify(arr, n, i)
+
+    # Один за другим извлекаем элементы из кучи
+    for i in range(n - 1, 0, -1):
+        arr[i], arr[0] = arr[0], arr[i]  # Перемещаем текущий корень в конец
+        heapify(arr, i, 0)
+    return arr
+
+print("Пирамидальная:", heap_sort(numbers.copy()))
