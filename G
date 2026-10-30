@@ -1,0 +1,141 @@
+# №4 Сортировка прочесыванием (Comb Sort)
+def comb_sort(arr):
+    print(f"Старт: {arr}")
+    gap = len(arr)
+    swapped = True
+    step = 1
+    
+    while gap > 1 or swapped:
+        gap = max(1, int(gap / 1.3))
+        swapped = False
+        
+        for i in range(len(arr) - gap):
+            if arr[i] > arr[i + gap]:
+                arr[i], arr[i + gap] = arr[i + gap], arr[i]
+                swapped = True
+                
+        print(f"Шаг {step} (расстояние {gap}): {arr}")
+        step += 1
+    print(f"Итог: {arr}\n")
+
+
+# №5 Сортировка вставками (Insertion Sort)
+def insertion_sort(arr):
+    print(f"Старт: {arr}")
+    for i in range(1, len(arr)):
+        for j in range(i, 0, -1):
+            if arr[j] < arr[j-1]:
+                arr[j], arr[j-1] = arr[j-1], arr[j]
+            else:
+                break
+        print(f"Шаг {i}: {arr}")
+    print(f"Итог: {arr}\n")
+
+
+# №6 Сортировка посредством выбора (Selection Sort)
+def selection_sort(arr):
+    print(f"Старт: {arr}")
+    for i in range(len(arr)):
+        min_i = i
+        for j in range(i + 1, len(arr)):
+            if arr[j] < arr[min_i]:
+                min_i = j
+        arr[i], arr[min_i] = arr[min_i], arr[i]
+        print(f"Шаг {i+1}: {arr}")
+    print(f"Итог: {arr}\n")
+
+
+# №7 Сортировка Шелла (Shell Sort)
+def shell_sort(arr):
+    print(f"Старт: {arr}")
+    gap = len(arr) // 2
+    step = 1
+    
+    while gap > 0:
+        for i in range(gap, len(arr)):
+            for j in range(i, gap - 1, -gap):
+                if arr[j] < arr[j - gap]:
+                    arr[j], arr[j - gap] = arr[j - gap], arr[j]
+                else:
+                    break
+        print(f"Шаг {step} (расстояние {gap}): {arr}")
+        gap //= 2
+        step += 1
+    print(f"Итог: {arr}\n")
+
+
+# №8 Поразрядная сортировка (Radix Sort)
+def radix_sort(arr):
+    print(f"Старт: {arr}")
+    max_num = max(arr)
+    exp = 1
+    step = 1
+    
+    while max_num // exp > 0:
+        buckets = [[] for _ in range(10)]
+        for num in arr:
+            digit = (num // exp) % 10
+            buckets[digit].append(num)
+        
+        arr = []
+        for b in buckets:
+            arr.extend(b)
+            
+        print(f"Шаг {step} (сортировка по разряду {exp}): {arr}")
+        exp *= 10
+        step += 1
+    print(f"Итог: {arr}\n")
+
+
+# №9 Пирамидальная сортировка (Heap Sort)
+def heap_sort(arr):
+    print(f"Старт: {arr}")
+
+    def sift_down(start, end):
+        root = start
+        while root * 2 + 1 <= end:
+            child = root * 2 + 1
+            if child + 1 <= end and arr[child] < arr[child + 1]:
+                child += 1
+            if arr[root] < arr[child]:
+                arr[root], arr[child] = arr[child], arr[root]
+                root = child
+            else:
+                break
+
+    for i in range(len(arr) // 2 - 1, -1, -1):
+        sift_down(i, len(arr) - 1)
+
+    step = 1
+    for end in range(len(arr) - 1, 0, -1):
+        arr[0], arr[end] = arr[end], arr[0]
+        sift_down(0, end - 1)
+        print(f"Шаг {step} (убрали самое большое в конец): {arr}")
+        step += 1
+    print(f"Итог: {arr}\n")
+
+
+# ==========================================
+# БЛОК ЗАПУСКА
+# ==========================================
+
+# Берем список с двузначными числами, чтобы поразрядная сортировка работала наглядно
+numbers = [42, 15, 8, 23, 9, 31, 4]
+
+print("--- №4 ПРОЧЕСЫВАНИЕМ ---")
+comb_sort(numbers.copy())
+
+print("--- №5 ВСТАВКАМИ ---")
+insertion_sort(numbers.copy())
+
+print("--- №6 ВЫБОРОМ ---")
+selection_sort(numbers.copy())
+
+print("--- №7 ШЕЛЛА ---")
+shell_sort(numbers.copy())
+
+print("--- №8 ПОРАЗРЯДНАЯ ---")
+radix_sort(numbers.copy())
+
+print("--- №9 ПИРАМИДАЛЬНАЯ ---")
+heap_sort(numbers.copy())
